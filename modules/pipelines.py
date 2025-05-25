@@ -29,7 +29,7 @@ def create_index(data_path, index_path, database_path, encoding, create_db):
     print('Index created')
 
 
-def search(query, index_path, database_path, encoding, documents):
+def search(query, index_path, database_path, encoding, documents, top):
     if documents:
         database = Repository(database_path)
         print('Database loaded')
@@ -38,11 +38,12 @@ def search(query, index_path, database_path, encoding, documents):
     index.load(index_path)
     print('Index loaded')
     result = index.search(query)
-    print(f'Results obtained: got {len(result)} documents:')
+    print(f'Results obtained: got {len(result)} documents, top {top} documents:')
+    result = result[:top]
     if documents:
         for id in result:
             dock = database.get(id)
-            print(f'Document id: {id}, document:')
+            print(f'\nDocument id: {id}, document:')
             print(dock)
     else:
         print(*result, sep=' ')

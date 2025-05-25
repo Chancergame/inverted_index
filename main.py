@@ -1,7 +1,7 @@
 import argparse
 import os
 from modules.pipelines import create_index, search
-from modules.constants import DEFAULT_DATABESE_PATH, DEFAULT_ENCODING, DEFAULT_INDEX_PATH
+from modules.constants import DEFAULT_DATABESE_PATH, DEFAULT_ENCODING, DEFAULT_INDEX_PATH, DEFAULT_TOP
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -10,6 +10,7 @@ def parse_args():
     parser.add_argument('--create_db', '-cdb', default=True, action=argparse.BooleanOptionalAction, help='Create new document database')
     parser.add_argument('--query', '-q', type=str, help='Search query')
     parser.add_argument('--documents', '-d', default=False, action=argparse.BooleanOptionalAction, help='Print documents from database')
+    parser.add_argument('--top', '-t', help='Now namy documents to show')
     return parser.parse_args()
 
 if __name__ == '__main__':
@@ -28,6 +29,9 @@ if __name__ == '__main__':
     if not encoding:
         encoding = DEFAULT_ENCODING
         print('Encoding not passed, using none')
+    if not args.top:
+        args.top = DEFAULT_TOP
+        print('Top not passed, using default')
         
     if args.operation == 'create':
        
@@ -40,4 +44,4 @@ if __name__ == '__main__':
         if not args.query:
             raise Exception('Should pass query')
 
-        search(args.query, index_path, database_path, encoding, args.documents)
+        search(args.query, index_path, database_path, encoding, args.documents, args.top)
