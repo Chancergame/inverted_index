@@ -1,0 +1,13 @@
+[project]
+name = "inverted-index"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "nltk>=3.9.1",
+    "numpy>=2.2.6",
+    "progress>=1.6",
+    "pymorphy2>=0.9.1",
+    "setuptools>=80.8.0",
+]
