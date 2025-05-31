@@ -1,9 +1,8 @@
 import sqlite3
 from pathlib import Path
-from modules.constants import DEFAULT_DATABESE_PATH
 
 class Repository:
-    def __init__(self, path=DEFAULT_DATABESE_PATH):
+    def __init__(self, path):
         file_path = Path(path)
         file_path.parent.mkdir(parents=True, exist_ok=True)
         file_path.touch(exist_ok=True)

@@ -1,7 +1,26 @@
 import argparse
 import os
-from modules.pipelines import create_index, search
-from modules.constants import DEFAULT_DATABESE_PATH, DEFAULT_ENCODING, DEFAULT_INDEX_PATH, DEFAULT_TOP
+from modules.database import Repository
+from modules.index import InvertedIndex
+
+def search(query, index_path, database_path, encoding, documents, top):
+    if documents:
+        database = Repository(database_path)
+        print('Database loaded')
+
+    index = InvertedIndex(encoding)
+    index.load(index_path)
+    print('Index loaded')
+    result = index.search(query)
+    print(f'Results obtained: got {len(result)} documents, top {top} documents:')
+    result = result[:top]
+    if documents:
+        for id in result:
+            dock = database.get(id)
+            print(f'\nDocument id: {id}, document:')
+            print(dock)
+    else:
+        print(*result, sep=' ')
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -21,27 +40,19 @@ if __name__ == '__main__':
     encoding = os.environ.get('ENCODING')
 
     if not index_path:
-        index_path = DEFAULT_INDEX_PATH
+        index_path = os.environ.get('DEFAULT_INDEX_PATH')
         print('Index file path not passed, using default')
     if not database_path:
-        database_path = DEFAULT_DATABESE_PATH
+        database_path = os.environ.get('DEFAULT_DATABESE_PATH')
         print('Database file path not passed, using default')
     if not encoding:
-        encoding = DEFAULT_ENCODING
+        encoding = os.environ.get('DEFAULT_ENCODING')
         print('Encoding not passed, using none')
     if not args.top:
-        args.top = DEFAULT_TOP
+        args.top = int(os.environ.get('DEFAULT_TOP'))
         print('Top not passed, using default')
         
-    if args.operation == 'create':
-       
-        if not args.data_path:
-            raise Exception('Should pass path to data file')
-        create_index(args.data_path, index_path, database_path, encoding, args.create_db)
-    
-    if args.operation == 'search':
+    if not args.query:
+        raise Exception('Should pass query')
 
-        if not args.query:
-            raise Exception('Should pass query')
-
-        search(args.query, index_path, database_path, encoding, args.documents, args.top)
+    search(args.query, index_path, database_path, encoding, args.documents, args.top)

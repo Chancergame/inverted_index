@@ -1,5 +1,3 @@
-import numpy as np
-
 class NoneEncoder:
     @staticmethod
     def encode(data):
@@ -104,3 +102,8 @@ class DeltaEncoder:
                 break
         return set(numbers)
         
+ENCODERS = {
+    'none': NoneEncoder,
+    'delta': DeltaEncoder,
+    'gamma': GammaEncoder,
+}

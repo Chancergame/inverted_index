@@ -1,7 +1,5 @@
 from modules.encoder import *
 from modules.preprocess import preprocess
-from modules.constants import DEFAULT_INDEX_PATH, ENCODERS
-import numpy as np
 import pickle
 from pathlib import Path
 from progress.bar import IncrementalBar
@@ -19,29 +17,30 @@ class InvertedIndex:
         self.inverted_index = defaultdict(set)
         
         
-    def load(self, path=DEFAULT_INDEX_PATH):
+    def load(self, path):
         path = f'{path}_{self.encoding}.pkl'
         file_path = Path(path)
 
+        if not file_path.is_file():
+            raise Exception('Index with matching encoding does not exists')
+
         self.inverted_index = defaultdict(set)
         
-        if file_path.is_file():
-            with open(path, 'rb') as f:
-                data = pickle.load(f)
-                
-                if data['encoding'] != self.encoding:
-                    enc = data['encoding']
-                    print(f'Encoding mismatch: passed {self.encoding}, loaded {enc}, using loaded')
-                    self.encoding = enc
-                    self.encoder = ENCODERS[enc]
+        with open(path, 'rb') as f:
+            data = pickle.load(f)
+            
+            if data['encoding'] != self.encoding:
+                enc = data['encoding']
+                print(f'Encoding mismatch: passed {self.encoding}, loaded {enc}, using loaded')
+                self.encoding = enc
+                self.encoder = ENCODERS[enc]
 
-                for term, docks in data['data'].items():
-                    self.inverted_index[term] = self.encoder.decode(docks)
-        else:
-            print('Index with matching encoding does not exists')
+            for term, docks in data['data'].items():
+                self.inverted_index[term] = self.encoder.decode(docks)
+
             
 
-    def save(self, path=DEFAULT_INDEX_PATH):
+    def save(self, path):
         path = f'{path}_{self.encoding}.pkl'
         file_path = Path(path)
         file_path.parent.mkdir(parents=True, exist_ok=True)

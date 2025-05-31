@@ -17,19 +17,19 @@ uv sync
 
 Запуск осуществляется с помощью следующих команд:
 
-Для индексирования csv файла с документами, можно запустить main файл с аргументами create(--operation, -o), путь к индексируемому файлу(--data_path, -dp), и логическим флагом необходимости создания базы данных на основе переданных данных, по умолчанию true(--no-create_db, --create_db)
+Для индексирования csv файла с документами, можно запустить create_index файл с аргументами: путь к индексируемому файлу(--data_path, -dp), и логическим флагом необходимости создания базы данных на основе переданных данных, по умолчанию true(--no-create_db, --create_db)
 
 ```bash
-uv run --env-file=.env main.py -o create --no-create_db -dp crawled_messages.csv
+uv run --env-file=.env create_index.py --no-create_db -dp crawled_messages.csv
 ```
-Для поиска по сохраненному индексу, можно запустить main файл с аргументами search(--operation, -o), запросом(--query, -q), количество выводимых документов(--top, -t) по умолчанию 5, и логическим флагом необходимости вывода документов из базы данных по найденым в индексе айди(--no-documents, --documents) по умолчанию false
+Для поиска по сохраненному индексу, можно запустить search файл с аргументами: запросом(--query, -q), количество выводимых документов(--top, -t) по умолчанию 5, и логическим флагом необходимости вывода документов из базы данных по найденым в индексе айди(--no-documents, --documents) по умолчанию false
 
 ```bash
-uv run --env-file=.env main.py -o search -q 'спбгу' --documents
+uv run --env-file=.env search.py -q 'спбгу' --documents
 ```
 
 для запуска тестов 
 
 ```bash
-python -m unittest test.py
+uv run -m unittest test.py
 ```
